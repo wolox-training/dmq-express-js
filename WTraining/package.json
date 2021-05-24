@@ -9,8 +9,7 @@
   "scripts": {
     "console": "node console.js",
     "cover": "npm run test -- --coverage",
-    "test:int": "NODE_ENV=testing npm run migrations && npm test",
-    "test": "NODE_ENV=testing jest --runInBand --forceExit --detectOpenHandles",
+    "test": "NODE_ENV=testing npm run migrations && NODE_ENV=testing jest --runInBand --forceExit --detectOpenHandles",
     "test-inspect": "NODE_ENV=testing node --inspect --debug-brk jest",
     "eslint-check": "eslint --print-config .eslintrc.js --ignore-pattern ./.eslintrc.js | eslint-config-prettier-check",
     "lint": "eslint \"**/*.js\" --ignore-pattern ./.eslintrc.js",
@@ -106,7 +105,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint-diff",
-      "pre-push": "npm test:int"
+      "pre-push": "npm test"
     }
   }
 }
