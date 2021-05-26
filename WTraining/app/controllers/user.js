@@ -12,7 +12,6 @@ const createUser = (req, res, next) =>
     })
     .catch(e => {
       logger.error(e.ValidationErrorItem);
-      console.error('ESTE ES MI ERROR => ', e.errors);
       next(e);
     });
 module.exports = { createUser };
