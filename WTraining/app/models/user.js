@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'users',
+    'User',
     {
       name: {
         type: DataTypes.STRING,
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       }
     },
-    { timestamps: false }
+    { underscored: true }
   );
   return User;
 };
