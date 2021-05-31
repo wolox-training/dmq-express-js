@@ -4,6 +4,8 @@ app/dist
 # Mac Files
 .DS_Store
 */DS_Store
+.Ds_Store
+.github
 
 # Logs
 logs
