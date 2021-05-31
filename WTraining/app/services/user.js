@@ -1,11 +1,12 @@
 'use strict';
-const { users } = require('../models');
+const logger = require('../logger');
+const { User } = require('../models');
 
 const createUser = user =>
-  users
-    .create(user)
+  User.create(user)
     .then(res => res)
     .catch(e => {
+      logger.error(e);
       throw e;
     });
 
