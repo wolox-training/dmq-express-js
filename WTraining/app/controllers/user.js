@@ -4,7 +4,7 @@ const logger = require('../logger');
 const { userSerializer } = require('../serializers/user');
 const { userMapper } = require('../mappers/user');
 
-const createUser = (req, res, next) => {
+exports.createUser = (req, res, next) => {
   const dataUser = userMapper(req.body);
 
   return userService
@@ -19,5 +19,3 @@ const createUser = (req, res, next) => {
       return next(e);
     });
 };
-
-module.exports = { createUser };
