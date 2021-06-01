@@ -1,10 +1,10 @@
 const userSerializer = user => ({
-  id: user.dataValues.id,
-  name: user.dataValues.name,
-  last_name: user.dataValues.last_name,
-  email: user.dataValues.email,
-  updated_at: user.dataValues.updatedAt,
-  created_at: user.dataValues.createdAt
+  id: user.id,
+  name: user.name,
+  last_name: user.lastName,
+  email: user.email,
+  updated_at: user.updatedAt,
+  created_at: user.createdAt
 });
 
 module.exports = { userSerializer };
