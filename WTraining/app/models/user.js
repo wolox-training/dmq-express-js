@@ -1,5 +1,6 @@
 'use strict';
-const { validateEmail, validatePassword, validateString } = require('../constants');
+const { VALIDATE_EMAIL, VALIDATE_STRING } = require('../constants/constants');
+const { validatePassword } = require('../helpers/validate_password');
 const { databaseError } = require('../errors');
 const { generateHash } = require('../helpers/bcryptjs');
 
@@ -12,17 +13,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           is: {
-            args: [validateString],
+            args: [VALIDATE_STRING],
             msg: 'The name must be string.'
           }
         }
       },
-      last_name: {
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           is: {
-            args: [validateString],
+            args: [VALIDATE_STRING],
             msg: 'The last name must be string.'
           }
         }
@@ -35,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         validate: {
           is: {
-            args: [validateEmail],
+            args: [VALIDATE_EMAIL],
             msg: 'The email must be valid and must belong to the Wolox email domain.'
           }
         }
@@ -53,7 +54,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      underscored: true
+      underscored: true,
+      tableName: 'users'
     }
   );
   return User;
