@@ -2,6 +2,7 @@ const request = require('supertest');
 const { factory } = require('factory-girl');
 const app = require('../../app');
 const { factoryByModel } = require('../factory/factory_by_models');
+const { USER_ERROR, DATABASE_ERROR, INTERNAL_ERROR, CREATED } = require('../constants/constants');
 
 const ENDPOINT = '/users';
 
@@ -32,7 +33,7 @@ describe(`POST ${ENDPOINT}`, () => {
     });
 
     test('Status code should be 503', () => {
-      expect(response.statusCode).toBe(503);
+      expect(response.statusCode).toBe(DATABASE_ERROR);
     });
 
     test('should return json body in response', () => {
@@ -44,7 +45,7 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   describe('Should be expired and close some quotes successful', () => {
-    beforeEach(async done => {
+    beforeEach(async () => {
       const user = {
         name: userData.dataValues.name,
         last_name: userData.dataValues.lastName,
@@ -55,12 +56,10 @@ describe(`POST ${ENDPOINT}`, () => {
       response = await request(app)
         .post(ENDPOINT)
         .send(user);
-
-      done();
     });
 
     test('Status code should be 201', () => {
-      expect(response.statusCode).toEqual(201);
+      expect(response.statusCode).toEqual(CREATED);
     });
     test('Should the object have the following properties', () => {
       expect(response.body).toHaveProperty('id', 'name', 'lastName', 'email', 'createdAt', 'updatedAt');
@@ -88,7 +87,7 @@ describe(`POST ${ENDPOINT}`, () => {
     });
 
     test('Status code should be 500', () => {
-      expect(response.statusCode).toBe(500);
+      expect(response.statusCode).toBe(INTERNAL_ERROR);
     });
 
     test('should return json body in response', () => {
@@ -99,16 +98,14 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   describe('Should handle error when no parameters are sent', () => {
-    beforeEach(async done => {
+    beforeEach(async () => {
       response = await request(app)
         .post(ENDPOINT)
         .send({});
-
-      done();
     });
 
-    test('Status code should be 500', () => {
-      expect(response.statusCode).toBe(400);
+    test('Status code should be 400', () => {
+      expect(response.statusCode).toBe(USER_ERROR);
     });
 
     test('should return json body in response', () => {
