@@ -97,4 +97,25 @@ describe(`POST ${ENDPOINT}`, () => {
       });
     });
   });
+
+  describe('Should handle error when no parameters are sent', () => {
+    beforeEach(async done => {
+      response = await request(app)
+        .post(ENDPOINT)
+        .send({});
+
+      done();
+    });
+
+    test('Status code should be 500', () => {
+      expect(response.statusCode).toBe(400);
+    });
+
+    test('should return json body in response', () => {
+      expect(response.body).toStrictEqual({
+        message: 'The body cannot be empty',
+        internal_code: 'user_error'
+      });
+    });
+  });
 });
