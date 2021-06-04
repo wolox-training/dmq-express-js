@@ -45,8 +45,8 @@ const config = {
       packageVersion: process.env.PACKAGE_VERSION || 'X-Package-Version',
       nodeVersion: process.env.NODE_VERSION || 'X-Node-Version'
     },
-    url: {
-      urlWeet: process.env.ULR_WEET
+    weetService: {
+      url: process.env.ULR_WEET
     }
   }
 };
