@@ -1,7 +1,7 @@
 'use strict';
 const { VALIDATE_EMAIL, VALIDATE_STRING } = require('../constants/constants');
 const { validatePassword } = require('../helpers/validate_password');
-const { databaseError } = require('../errors');
+const { validationError } = require('../errors');
 const { generateHash } = require('../helpers/bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
@@ -46,7 +46,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         set(value) {
           if (!validatePassword(value)) {
-            throw databaseError('The password must be alphanumeric, with a minimum length of 8 characters.');
+            throw validationError(
+              'The password must be alphanumeric, with a minimum length of 8 characters.'
+            );
           }
           const hash = generateHash(value);
           this.setDataValue('password', hash);

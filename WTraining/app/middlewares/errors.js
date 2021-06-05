@@ -6,7 +6,9 @@ const DEFAULT_STATUS_CODE = 500;
 const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
   [errors.USER_ERROR]: 400,
-  [errors.DEFAULT_ERROR]: 500
+  [errors.DEFAULT_ERROR]: 500,
+  [errors.VALIDATION_ERROR]: 422,
+  [errors.CONFLICT_ERROR]: 409
 };
 
 exports.handle = (error, req, res, next) => {

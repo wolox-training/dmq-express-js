@@ -2,7 +2,7 @@ const request = require('supertest');
 const { factory } = require('factory-girl');
 const app = require('../../app');
 const { factoryByModel } = require('../factory/factory_by_models');
-const { USER_ERROR, DATABASE_ERROR, INTERNAL_ERROR, CREATED } = require('../constants/constants');
+const { VALIDATION_ERROR, CONFLICT_ERROR, CREATED, USER_ERROR } = require('../constants/constants');
 
 const ENDPOINT = '/users';
 
@@ -32,14 +32,14 @@ describe(`POST ${ENDPOINT}`, () => {
       done();
     });
 
-    test('Status code should be 503', () => {
-      expect(response.statusCode).toBe(DATABASE_ERROR);
+    test('Status code should be 422', () => {
+      expect(response.statusCode).toBe(VALIDATION_ERROR);
     });
 
     test('should return json body in response', () => {
       expect(response.body).toStrictEqual({
         message: 'The password must be alphanumeric, with a minimum length of 8 characters.',
-        internal_code: 'database_error'
+        internal_code: 'validation_error'
       });
     });
   });
@@ -67,7 +67,7 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   describe('Should handle the error when the mail is already in use', () => {
-    beforeEach(async done => {
+    beforeEach(async () => {
       const user = {
         name: userData.dataValues.name,
         last_name: userData.dataValues.lastName,
@@ -82,16 +82,15 @@ describe(`POST ${ENDPOINT}`, () => {
       response = await request(app)
         .post(ENDPOINT)
         .send(user);
-
-      done();
     });
 
-    test('Status code should be 500', () => {
-      expect(response.statusCode).toBe(INTERNAL_ERROR);
+    test('Status code should be 409', () => {
+      expect(response.statusCode).toBe(CONFLICT_ERROR);
     });
 
     test('should return json body in response', () => {
       expect(response.body).toStrictEqual({
+        internal_code: 'conflict_error',
         message: 'Email is already in use.'
       });
     });

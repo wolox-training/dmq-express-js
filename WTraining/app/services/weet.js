@@ -1,9 +1,13 @@
 'use strict';
-const axios = require('axios');
+const { requestGet } = require('../helpers/request');
+const { validationError } = require('../errors');
 const logger = require('../logger');
+const config = require('../../config').common.weetService;
 
 exports.getWeet = () =>
-  axios
-    .get('https://geek-jokes.sameerkumar.website/api?format=json')
+  requestGet(config.url)
     .then(res => res.data)
-    .catch(e => logger.error(e));
+    .catch(e => {
+      logger.error(e);
+      throw validationError(e);
+    });
