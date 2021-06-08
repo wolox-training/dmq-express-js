@@ -13,7 +13,7 @@ module.exports = {
   },
   password: {
     type: 'string',
-    example: 'ABCABC123'
+    example: 'ABCabc123'
   },
   User: {
     type: 'object',
