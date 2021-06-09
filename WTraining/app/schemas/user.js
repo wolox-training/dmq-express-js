@@ -1,34 +1,7 @@
 'use strict';
 const { validateEmail } = require('../helpers/validate_email');
 
-exports.userValidation = {
-  name: {
-    exists: {
-      errorMessage: 'Name should not be empty',
-      bail: true
-    },
-    trim: {
-      options: ' '
-    },
-    isAlpha: {
-      errorMessage: 'The name sould be string',
-      bail: true
-    }
-  },
-  last_name: {
-    exists: {
-      errorMessage: 'Last name should not be empty',
-      bail: true
-    },
-    trim: {
-      options: ' '
-    },
-
-    isAlpha: {
-      errorMessage: 'The last name sould be string',
-      bail: true
-    }
-  },
+exports.signInValidation = {
   password: {
     exists: {
       errorMessage: 'Password should not be empty',
@@ -58,4 +31,35 @@ exports.userValidation = {
       bail: true
     }
   }
+};
+
+exports.userValidation = {
+  name: {
+    exists: {
+      errorMessage: 'Name should not be empty',
+      bail: true
+    },
+    trim: {
+      options: ' '
+    },
+    isAlpha: {
+      errorMessage: 'The name sould be string',
+      bail: true
+    }
+  },
+  last_name: {
+    exists: {
+      errorMessage: 'Last name should not be empty',
+      bail: true
+    },
+    trim: {
+      options: ' '
+    },
+
+    isAlpha: {
+      errorMessage: 'The last name sould be string',
+      bail: true
+    }
+  },
+  ...this.signInValidation
 };
