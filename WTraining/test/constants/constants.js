@@ -1,0 +1,6 @@
+exports.DATABASE_ERROR = 503;
+exports.VALIDATION_ERROR = 422;
+exports.CONFLICT_ERROR = 409;
+exports.INTERNAL_ERROR = 500;
+exports.USER_ERROR = 400;
+exports.CREATED = 201;
