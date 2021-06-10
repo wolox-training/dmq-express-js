@@ -1,14 +1,13 @@
 'use strict';
 const userService = require('../services/user');
 const logger = require('../logger');
-const { userSerializer } = require('../serializers/user');
+const { userSerializer, signInSerializer } = require('../serializers/user');
 const { userMapper } = require('../mappers/user');
-const { validateBody } = require('../helpers/validate_body');
-const { userError } = require('../errors');
+const { verifyPassword } = require('../helpers/bcryptjs');
+const { generateToken } = require('../helpers/authentication');
+const { unauthorizedError } = require('../errors');
 
 exports.createUser = (req, res, next) => {
-  if (!validateBody(req.body)) throw userError('The body cannot be empty');
-
   const dataUser = userMapper(req.body);
 
   return userService
@@ -23,3 +22,30 @@ exports.createUser = (req, res, next) => {
       return next(e);
     });
 };
+
+exports.signIn = (req, res, next) =>
+  userService
+    .findOneUser(req.body.email)
+    .then(user => {
+      if (!user) throw unauthorizedError('wrong user or password');
+
+      const { password } = req.body;
+
+      const comparisonResult = verifyPassword(password, user.password);
+      if (!comparisonResult) throw unauthorizedError('wrong user or password');
+
+      const payload = {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      };
+
+      const token = generateToken(payload);
+      const userData = signInSerializer(user);
+
+      return res.status(200).send({ ...userData, token });
+    })
+    .catch(e => {
+      logger.error(e);
+      return next(e);
+    });

@@ -2,7 +2,7 @@ const request = require('supertest');
 const { factory } = require('factory-girl');
 const app = require('../../app');
 const { factoryByModel } = require('../factory/factory_by_models');
-const { VALIDATION_ERROR, CONFLICT_ERROR, CREATED, USER_ERROR } = require('../constants/constants');
+const { VALIDATION_ERROR, CREATED, CONFLICT_ERROR } = require('../constants/constants');
 
 const ENDPOINT = '/users';
 
@@ -10,10 +10,9 @@ let response = {};
 let userData = {};
 
 describe(`POST ${ENDPOINT}`, () => {
-  beforeAll(async done => {
+  beforeAll(async () => {
     await factoryByModel('User');
-    userData = await factory.build('User', { password: 'ABC123ab', email: 'asasas@wolox.com.ar' });
-    done();
+    userData = await factory.build('User', { email: 'asasas@wolox.com.ar' });
   });
 
   describe('Should handle error when password does not meet requirements', () => {
@@ -22,7 +21,7 @@ describe(`POST ${ENDPOINT}`, () => {
         name: userData.dataValues.name,
         last_name: userData.dataValues.lastName,
         email: userData.dataValues.email,
-        password: 'erre.'
+        password: 'err3e'
       };
 
       response = await request(app)
@@ -38,19 +37,25 @@ describe(`POST ${ENDPOINT}`, () => {
 
     test('should return json body in response', () => {
       expect(response.body).toStrictEqual({
-        message: 'The password must be alphanumeric, with a minimum length of 8 characters.',
+        message: [
+          {
+            location: 'request',
+            msg: 'Password should be at least 8 chars long',
+            param: 'password'
+          }
+        ],
         internal_code: 'validation_error'
       });
     });
   });
 
-  describe('Should be expired and close some quotes successful', () => {
+  describe('Should be successful', () => {
     beforeEach(async () => {
       const user = {
         name: userData.dataValues.name,
         last_name: userData.dataValues.lastName,
         email: userData.dataValues.email,
-        password: userData.dataValues.password
+        password: 'ABC123ab'
       };
 
       response = await request(app)
@@ -61,7 +66,7 @@ describe(`POST ${ENDPOINT}`, () => {
     test('Status code should be 201', () => {
       expect(response.statusCode).toEqual(CREATED);
     });
-    test('Should the object have the following properties', () => {
+    test('Should the  have the following properties', () => {
       expect(response.body).toHaveProperty('id', 'name', 'lastName', 'email', 'createdAt', 'updatedAt');
     });
   });
@@ -72,7 +77,7 @@ describe(`POST ${ENDPOINT}`, () => {
         name: userData.dataValues.name,
         last_name: userData.dataValues.lastName,
         email: userData.dataValues.email,
-        password: userData.dataValues.password
+        password: 'ABC123ab'
       };
 
       await request(app)
@@ -91,7 +96,7 @@ describe(`POST ${ENDPOINT}`, () => {
     test('should return json body in response', () => {
       expect(response.body).toStrictEqual({
         internal_code: 'conflict_error',
-        message: 'Email is already in use.'
+        message: 'Email is already in use'
       });
     });
   });
@@ -103,14 +108,35 @@ describe(`POST ${ENDPOINT}`, () => {
         .send({});
     });
 
-    test('Status code should be 400', () => {
-      expect(response.statusCode).toBe(USER_ERROR);
+    test('Status code should be 422', () => {
+      expect(response.statusCode).toBe(VALIDATION_ERROR);
     });
 
     test('should return json body in response', () => {
       expect(response.body).toStrictEqual({
-        message: 'The body cannot be empty',
-        internal_code: 'user_error'
+        internal_code: 'validation_error',
+        message: [
+          {
+            location: 'request',
+            msg: 'Name should not be empty',
+            param: 'name'
+          },
+          {
+            location: 'request',
+            msg: 'Last name should not be empty',
+            param: 'last_name'
+          },
+          {
+            location: 'request',
+            msg: 'Password should not be empty',
+            param: 'password'
+          },
+          {
+            location: 'request',
+            msg: 'Email should not be empty',
+            param: 'email'
+          }
+        ]
       });
     });
   });
