@@ -27,9 +27,9 @@ exports.signIn = (req, res, next) =>
   userService
     .findOneUser(req.body.email)
     .then(user => {
-      const { password } = req.body;
+      if (!user) throw unauthorizedError('wrong user or password');
 
-      console.log(user);
+      const { password } = req.body;
 
       const comparisonResult = verifyPassword(password, user.password);
       if (!comparisonResult) throw unauthorizedError('wrong user or password');

@@ -10,10 +10,9 @@ let response = {};
 let userData = {};
 
 describe(`POST ${ENDPOINT}`, () => {
-  beforeAll(async done => {
+  beforeAll(async () => {
     await factoryByModel('User');
     userData = await factory.build('User', { email: 'asasas@wolox.com.ar' });
-    done();
   });
 
   describe('Should handle error when password does not meet requirements', () => {
@@ -50,7 +49,7 @@ describe(`POST ${ENDPOINT}`, () => {
     });
   });
 
-  describe('Should be expired and close some quotes successful', () => {
+  describe('Should be successful', () => {
     beforeEach(async () => {
       const user = {
         name: userData.dataValues.name,
