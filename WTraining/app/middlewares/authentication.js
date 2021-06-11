@@ -7,8 +7,6 @@ exports.validateToken = async (req, _, next) => {
   try {
     const { authorization } = req.headers;
 
-    console.log('ESTO LLEGA EN EL HEADER => ', authorization);
-
     let auth = authorization || '';
     if (!auth.startsWith('Bearer')) throw forbbidenError('Invalid');
     auth = auth.split(' ');
@@ -17,7 +15,6 @@ exports.validateToken = async (req, _, next) => {
     if (split.length !== 2) throw forbbidenError('Forbbiden');
 
     const token = split[1];
-    console.log('RESULTADO DEL TOKEN => ', token);
     const payload = await verifyToken(token);
 
     if (payload.exp <= moment.unix()) throw unauthorizedError('Token expired');

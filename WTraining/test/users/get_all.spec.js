@@ -34,7 +34,6 @@ describe(`POST ${ENDPOINT}`, () => {
       });
 
     responseToken = response.body.token;
-    console.log(responseToken);
   });
 
   describe('Should be successful', () => {
