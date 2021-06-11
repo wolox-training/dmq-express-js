@@ -72,7 +72,7 @@ describe(`POST ${ENDPOINT}`, () => {
         .set('Authorization', 'Bearer eyJ0eXA.iOiJKV1QiLCsJhbG.ciOiJIUzI1NiJ9');
     });
 
-    test('Status code should be 403', () => {
+    test('Status code should be 401', () => {
       expect(response.statusCode).toEqual(UNAUTHORIZED_ERROR);
     });
     test('Should the  have the following properties', () => {
