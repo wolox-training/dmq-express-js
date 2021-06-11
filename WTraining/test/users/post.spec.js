@@ -66,7 +66,7 @@ describe(`POST ${ENDPOINT}`, () => {
     test('Status code should be 201', () => {
       expect(response.statusCode).toEqual(CREATED);
     });
-    test('Should the  have the following properties', () => {
+    test('Should the have the following properties', () => {
       expect(response.body).toHaveProperty('id', 'name', 'lastName', 'email', 'createdAt', 'updatedAt');
     });
   });
