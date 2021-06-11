@@ -6,3 +6,6 @@ exports.USER_ERROR = 400;
 exports.CREATED = 201;
 exports.OK = 200;
 exports.UNAUTHORIZED_ERROR = 401;
+exports.PAGE = 1;
+exports.LIMIT = 50;
+exports.ORDER = 'id';

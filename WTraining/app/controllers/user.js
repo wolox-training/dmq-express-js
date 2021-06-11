@@ -1,11 +1,29 @@
 'use strict';
 const userService = require('../services/user');
 const logger = require('../logger');
-const { userSerializer, signInSerializer } = require('../serializers/user');
+const { userSerializer, signInSerializer, allUsersSerializer } = require('../serializers/user');
+const { paginationMapper } = require('../mappers/pagination');
 const { userMapper } = require('../mappers/user');
 const { verifyPassword } = require('../helpers/bcryptjs');
 const { generateToken } = require('../helpers/authentication');
 const { unauthorizedError } = require('../errors');
+const { countPerPage } = require('../helpers/count');
+
+exports.findAllUser = async (req, res, next) => {
+  try {
+    const pagination = paginationMapper(req.query);
+    const offset = pagination.limit * (pagination.page - 1);
+
+    const userData = await userService.findAllUser({ ...pagination, offset });
+    const qty = countPerPage(userData.count, req.query.limit);
+    const response = allUsersSerializer({ ...userData, qty });
+
+    return res.status(200).send(response);
+  } catch (e) {
+    logger.error(e.ValidationErrorItem);
+    return next(e);
+  }
+};
 
 exports.createUser = (req, res, next) => {
   const dataUser = userMapper(req.body);
