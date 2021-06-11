@@ -1,5 +1,4 @@
 'use strict';
-
 const { generateHash } = require('../helpers/bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
