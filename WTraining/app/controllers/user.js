@@ -34,13 +34,7 @@ exports.signIn = (req, res, next) =>
       const comparisonResult = verifyPassword(password, user.password);
       if (!comparisonResult) throw unauthorizedError('wrong user or password');
 
-      const payload = {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      };
-
-      const token = generateToken(payload);
+      const token = generateToken(user);
       const userData = signInSerializer(user);
 
       return res.status(200).send({ ...userData, token });
