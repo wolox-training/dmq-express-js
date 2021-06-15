@@ -1,7 +1,8 @@
 const moment = require('moment');
-const { encode } = require('jwt-simple');
+const { encode, decode } = require('jwt-simple');
 const config = require('../../config').common.jwt;
 
+exports.verifyToken = token => decode(token, config.jwtSecret);
 exports.generateToken = ({ id, name, email }) =>
   encode(
     {
