@@ -18,6 +18,7 @@ exports.validateToken = async (req, _, next) => {
     const payload = await verifyToken(token);
 
     if (payload.exp <= moment.unix()) throw unauthorizedError('Token expired');
+    Object.assign(req, { user: payload });
 
     next();
   } catch (error) {

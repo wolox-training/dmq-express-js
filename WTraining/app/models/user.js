@@ -1,5 +1,6 @@
 'use strict';
 const { generateHash } = require('../helpers/bcryptjs');
+const { REGULAR } = require('../constants/constants');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -27,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
           const hash = generateHash(value);
           this.setDataValue('password', hash);
         }
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: REGULAR,
+        allowNull: false
       }
     },
     {
