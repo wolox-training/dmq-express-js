@@ -3,13 +3,15 @@ const { encode, decode } = require('jwt-simple');
 const config = require('../../config').common.jwt;
 
 exports.verifyToken = token => decode(token, config.jwtSecret);
-exports.generateToken = payload =>
+exports.generateToken = ({ id, name, email }) =>
   encode(
     {
-      ...payload,
+      id,
+      name,
+      email,
       iat: moment().unix(),
       exp: moment()
-        .add(2, 'hours')
+        .add(config.jwtExpire, 'seconds')
         .unix()
     },
     config.jwtSecret
