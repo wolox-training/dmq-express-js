@@ -1,28 +1,26 @@
 'use strict';
 const userService = require('../services/user');
 const logger = require('../logger');
-const { userSerializer, signInSerializer, allUsersSerializer } = require('../serializers/user');
+const { userSerializer, allUsersSerializer } = require('../serializers/user');
 const { paginationMapper } = require('../mappers/pagination');
 const { userMapper } = require('../mappers/user');
-const { verifyPassword } = require('../helpers/bcryptjs');
-const { generateToken } = require('../helpers/authentication');
-const { unauthorizedError } = require('../errors');
 const { countPerPage } = require('../helpers/count');
+const { verifyUserAndPassword, returnDataWithToken } = require('../iteractors/sign-in');
 
-exports.findAllUser = async (req, res, next) => {
-  try {
-    const pagination = paginationMapper(req.query);
-    const offset = pagination.limit * (pagination.page - 1);
+exports.findAllUser = (req, res, next) => {
+  const pagination = paginationMapper(req.query);
 
-    const userData = await userService.findAllUser({ ...pagination, offset });
-    const qty = countPerPage(userData.count, req.query.limit);
-    const response = allUsersSerializer({ ...userData, qty });
-
-    return res.status(200).send(response);
-  } catch (e) {
-    logger.error(e.ValidationErrorItem);
-    return next(e);
-  }
+  return userService
+    .findAllUser(pagination)
+    .then(users => {
+      const qty = countPerPage(users.count, req.query.limit);
+      const response = allUsersSerializer({ ...users, qty });
+      return res.status(200).send(response);
+    })
+    .catch(e => {
+      logger.error(e.ValidationErrorItem);
+      return next(e);
+    });
 };
 
 exports.createUser = (req, res, next) => {
@@ -45,17 +43,9 @@ exports.signIn = (req, res, next) =>
   userService
     .findByEmailUser(req.body.email)
     .then(user => {
-      if (!user) throw unauthorizedError('wrong user or password');
-
-      const { password } = req.body;
-
-      const comparisonResult = verifyPassword(password, user.password);
-      if (!comparisonResult) throw unauthorizedError('wrong user or password');
-
-      const token = generateToken(user);
-      const userData = signInSerializer(user);
-
-      return res.status(200).send({ ...userData, token });
+      verifyUserAndPassword(user, req.body.password);
+      const response = returnDataWithToken(user);
+      return res.status(200).send(response);
     })
     .catch(e => {
       logger.error(e);
