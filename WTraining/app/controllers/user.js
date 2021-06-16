@@ -1,11 +1,9 @@
 'use strict';
 const userService = require('../services/user');
 const logger = require('../logger');
-const { userSerializer, signInSerializer } = require('../serializers/user');
+const { userSerializer } = require('../serializers/user');
 const { userMapper } = require('../mappers/user');
-const { verifyPassword } = require('../helpers/bcryptjs');
-const { generateToken } = require('../helpers/authentication');
-const { unauthorizedError } = require('../errors');
+const { verifyUserAndPassword, returnDataWithToken } = require('../iteractors/sign-in');
 
 exports.createUser = (req, res, next) => {
   const dataUser = userMapper(req.body);
@@ -25,19 +23,11 @@ exports.createUser = (req, res, next) => {
 
 exports.signIn = (req, res, next) =>
   userService
-    .findOneUser(req.body.email)
+    .findByEmailUser(req.body.email)
     .then(user => {
-      if (!user) throw unauthorizedError('wrong user or password');
-
-      const { password } = req.body;
-
-      const comparisonResult = verifyPassword(password, user.password);
-      if (!comparisonResult) throw unauthorizedError('wrong user or password');
-
-      const token = generateToken(user);
-      const userData = signInSerializer(user);
-
-      return res.status(200).send({ ...userData, token });
+      verifyUserAndPassword(user, req.body.password);
+      const response = returnDataWithToken(user);
+      return res.status(200).send(response);
     })
     .catch(e => {
       logger.error(e);
