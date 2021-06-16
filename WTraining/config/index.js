@@ -47,6 +47,10 @@ const config = {
     },
     weetService: {
       url: process.env.ULR_WEET
+    },
+    jwt: {
+      jwtSecret: process.env.JWT_SECRET || 'key_secret',
+      jwtExpire: process.env.JWT_EXPIRE || 3600
     }
   }
 };

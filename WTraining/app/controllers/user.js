@@ -3,12 +3,9 @@ const userService = require('../services/user');
 const logger = require('../logger');
 const { userSerializer } = require('../serializers/user');
 const { userMapper } = require('../mappers/user');
-const { validateBody } = require('../helpers/validate_body');
-const { userError } = require('../errors');
+const { verifyUserAndPassword, returnDataWithToken } = require('../iteractors/sign-in');
 
 exports.createUser = (req, res, next) => {
-  if (!validateBody(req.body)) throw userError('The body cannot be empty');
-
   const dataUser = userMapper(req.body);
 
   return userService
@@ -23,3 +20,16 @@ exports.createUser = (req, res, next) => {
       return next(e);
     });
 };
+
+exports.signIn = (req, res, next) =>
+  userService
+    .findByEmailUser(req.body.email)
+    .then(user => {
+      verifyUserAndPassword(user, req.body.password);
+      const response = returnDataWithToken(user);
+      return res.status(200).send(response);
+    })
+    .catch(e => {
+      logger.error(e);
+      return next(e);
+    });
