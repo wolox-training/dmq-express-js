@@ -20,6 +20,14 @@ exports.createUser = user =>
     throw e.message === MSG_EMAIL_NOT_UNIQUE ? conflictError(e.message) : databaseError(e.message);
   });
 
+exports.updateUser = (id, user) =>
+  User.update(user, { where: { id } })
+    .then(() => ({ ...user, id }))
+    .catch(e => {
+      logger.error(e);
+      throw databaseError(e.message);
+    });
+
 exports.findByEmailUser = email =>
   User.findOne({ where: { email } }).catch(e => {
     logger.error(e);
