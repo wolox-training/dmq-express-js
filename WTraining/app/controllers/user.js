@@ -6,8 +6,8 @@ const { paginationMapper } = require('../mappers/pagination');
 const { userMapper } = require('../mappers/user');
 const { countPerPage } = require('../helpers/count');
 const { ADMIN } = require('../constants/constants');
-const { createOrUpdateAdminUser } = require('../iteractors/admin_user');
-const { verifyUserAndPassword, returnDataWithToken } = require('../iteractors/sign_in');
+const { createOrUpdateAdminUser } = require('../interactors/admin_user');
+const { verifyUserAndPassword, returnDataWithToken } = require('../interactors/sign_in');
 const { unauthorizedError } = require('../errors');
 
 exports.findAllUser = (req, res, next) => {
