@@ -1,6 +1,8 @@
+const { PAGE, LIMIT, ORDER_BY, OFFSET } = require('../constants/constants');
+
 exports.paginationMapper = pagination => ({
-  page: pagination.page || 1,
-  limit: pagination.limit || 50,
-  orderBy: pagination.order_by || 'id',
-  offset: pagination.limit * (pagination.page - 1)
+  page: pagination.page || PAGE,
+  limit: pagination.limit || LIMIT,
+  orderBy: pagination.order_by || ORDER_BY,
+  offset: pagination.limit * (pagination.page - OFFSET)
 });
