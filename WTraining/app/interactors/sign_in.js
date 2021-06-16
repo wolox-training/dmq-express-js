@@ -1,3 +1,4 @@
+'use strict';
 const { verifyPassword } = require('../helpers/bcryptjs');
 const { unauthorizedError } = require('../errors');
 const { signInSerializer } = require('../serializers/user');
