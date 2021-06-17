@@ -18,3 +18,14 @@ exports.createWeet = weet =>
     logger.error(e);
     throw databaseError(e.message);
   });
+
+exports.findAllWeet = ({ limit, orderBy, offset, id }) =>
+  Weet.findAndCountAll({
+    offset,
+    limit,
+    order: [[orderBy]],
+    where: { userId: id }
+  }).catch(e => {
+    logger.error(e);
+    throw databaseError(e.message);
+  });
