@@ -7,6 +7,7 @@ exports.allWeetsSerializer = ({ rows, count, qty }) => ({
 exports.weetSerializer = weet => ({
   id: weet.id,
   content: weet.content,
+  creator: weet.User.email,
   updated_at: weet.updatedAt,
   created_at: weet.createdAt
 });

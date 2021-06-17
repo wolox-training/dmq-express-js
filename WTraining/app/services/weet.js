@@ -3,7 +3,7 @@ const logger = require('../logger');
 const config = require('../../config').common.weetService;
 const { requestGet } = require('../helpers/request');
 const { validationError, databaseError } = require('../errors');
-const { Weet } = require('../models');
+const { Weet, User } = require('../models');
 
 exports.getWeet = () =>
   requestGet(config.url)
@@ -19,12 +19,12 @@ exports.createWeet = weet =>
     throw databaseError(e.message);
   });
 
-exports.findAllWeet = ({ limit, orderBy, offset, id }) =>
+exports.findAllWeet = ({ limit, orderBy, offset }) =>
   Weet.findAndCountAll({
     offset,
     limit,
     order: [[orderBy]],
-    where: { userId: id }
+    include: [{ model: User, required: true }]
   }).catch(e => {
     logger.error(e);
     throw databaseError(e.message);

@@ -7,10 +7,9 @@ const { allWeetsSerializer } = require('../serializers/weet');
 
 exports.findAllWeet = (req, res, next) => {
   const pagination = paginationMapper(req.query);
-  const { id } = req.user;
 
   return weetService
-    .findAllWeet({ ...pagination, id })
+    .findAllWeet(pagination)
     .then(weets => {
       const qty = countPerPage(weets.count, req.query.limit);
       const response = allWeetsSerializer({ ...weets, qty });
