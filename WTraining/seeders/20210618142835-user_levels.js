@@ -1,12 +1,5 @@
 'use strict';
 
-exports.DEVELOPER = 'Developer';
-exports.LEAD = 'Lead';
-exports.TL = 'TL';
-exports.EM = 'EM';
-exports.HEAD = 'HEAD';
-exports.CEO = 'CEO';
-
 module.exports = {
   up: queryInterface =>
     queryInterface.bulkInsert('user_levels', [

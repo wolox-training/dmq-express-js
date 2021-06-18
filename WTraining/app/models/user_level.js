@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       min: DataTypes.INTEGER,
       max: DataTypes.INTEGER
     },
-    { timestamps: false, underscored: true, tableName: 'user_level' }
+    { timestamps: false, underscored: true, tableName: 'user_levels' }
   );
   return UserLevel;
 };
