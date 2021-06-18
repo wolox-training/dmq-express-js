@@ -6,3 +6,5 @@ exports.PAGE = 1;
 exports.LIMIT = 50;
 exports.ORDER_BY = 'id';
 exports.OFFSET = 1;
+exports.DEVELOPER = 'Developer';
+exports.CEO = 'CEO';

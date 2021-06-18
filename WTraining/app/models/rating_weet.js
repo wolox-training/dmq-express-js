@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const RatingWeet = sequelize.define(
     'RatingWeet',
     {
-      score: { type: DataTypes.INTEGER, allowNull: false }
+      score: { type: DataTypes.INTEGER, allowNull: false, is: 1 || -1 }
     },
     { underscored: true, tableName: 'rating_weets' }
   );
