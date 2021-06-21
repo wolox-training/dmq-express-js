@@ -55,7 +55,14 @@ describe(`POST ${ENDPOINT}`, () => {
       expect(response.statusCode).toEqual(OK);
     });
     test('Should the  have the following properties', () => {
-      expect(response.body).toHaveProperty('qty_page', 'total', 'users');
+      expect(response.body).toHaveProperty(
+        'current_page',
+        'next_page',
+        'previous_page',
+        'total_count',
+        'total_page',
+        'weets'
+      );
     });
   });
 
@@ -104,12 +111,12 @@ describe(`POST ${ENDPOINT}`, () => {
         message: [
           {
             location: 'request',
-            msg: 'Invalid value',
+            msg: 'The page must have a positive value',
             param: 'page'
           },
           {
             location: 'request',
-            msg: 'Invalid value',
+            msg: 'The limit must have a positive value',
             param: 'limit'
           }
         ]
