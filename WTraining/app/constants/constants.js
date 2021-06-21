@@ -6,3 +6,5 @@ exports.PAGE = 1;
 exports.LIMIT = 50;
 exports.ORDER_BY = 'id';
 exports.OFFSET = 1;
+exports.SUBSTR_START = 0;
+exports.SUBSTR_END = 140;
