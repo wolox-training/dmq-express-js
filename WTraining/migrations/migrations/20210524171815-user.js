@@ -30,7 +30,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      level: {
+      position: {
         allowNull: false,
         type: Sequelize.STRING
       },

@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: REGULAR,
         allowNull: false
       },
-      level: {
+      position: {
         type: DataTypes.STRING,
         defaultValue: DEVELOPER,
         allowNull: false
