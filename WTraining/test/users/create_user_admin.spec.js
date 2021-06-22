@@ -20,7 +20,23 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   beforeEach(async () => {
-    await createUser({
+    const userRegular = await createUser({
+      name: userData.dataValues.name,
+      lastName: userData.dataValues.lastName,
+      email: 'asasas12@wolox.com.ar',
+      password: 'ABC123ab'
+    });
+
+    const responseRegular = await request(app)
+      .post('/users/sessions')
+      .send({
+        email: userRegular.email,
+        password: 'ABC123ab'
+      });
+
+    responseTokenRegular = responseRegular.body.token;
+
+    const userAdmin = await createUser({
       name: userData.dataValues.name,
       lastName: userData.dataValues.lastName,
       email: userData.dataValues.email,
@@ -28,46 +44,27 @@ describe(`POST ${ENDPOINT}`, () => {
       password: 'ABC123ab'
     });
 
-    await createUser({
-      name: userData.dataValues.name,
-      lastName: userData.dataValues.lastName,
-      email: 'asasas12@wolox.com.ar',
-      password: 'ABC123ab'
-    });
-
     const responseAdmin = await request(app)
       .post('/users/sessions')
       .send({
-        email: userData.dataValues.email,
+        email: userAdmin.email,
         password: 'ABC123ab'
       });
 
     responseTokenAdmin = responseAdmin.body.token;
-
-    const responseRegular = await request(app)
-      .post('/users/sessions')
-      .send({
-        email: 'asasas12@wolox.com.ar',
-        password: 'ABC123ab'
-      });
-
-    responseTokenRegular = responseRegular.body.token;
   });
 
   describe('Should be successful', () => {
     beforeEach(async () => {
-      const user = {
-        name: userData.dataValues.name,
-        last_name: userData.dataValues.lastName,
-        email: userData.dataValues.email,
-        role: ADMIN,
-        password: 'ABC123ab'
-      };
-
       response = await request(app)
         .post(ENDPOINT)
         .set('Authorization', `Bearer ${responseTokenAdmin}`)
-        .send(user);
+        .send({
+          name: userData.dataValues.name,
+          last_name: userData.dataValues.lastName,
+          email: userData.dataValues.email,
+          password: 'ABC123ab'
+        });
     });
 
     test('Status code should be 201', () => {
@@ -79,7 +76,7 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   describe('Should handle error when password does not meet requirements', () => {
-    beforeEach(async done => {
+    beforeEach(async () => {
       const user = {
         name: userData.dataValues.name,
         last_name: userData.dataValues.lastName,
@@ -91,8 +88,6 @@ describe(`POST ${ENDPOINT}`, () => {
         .post(ENDPOINT)
         .set('Authorization', `Bearer ${responseTokenAdmin}`)
         .send(user);
-
-      done();
     });
 
     test('Status code should be 422', () => {

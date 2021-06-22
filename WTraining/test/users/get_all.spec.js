@@ -3,6 +3,7 @@ const { factory } = require('factory-girl');
 const app = require('../../app');
 const { factoryByModel } = require('../factory/factory_by_models');
 const { OK, FORBBIDEN_ERROR, UNAUTHORIZED_ERROR, PAGE, LIMIT, ORDER } = require('../constants/constants');
+const { createUser } = require('../../app/services/user');
 
 const ENDPOINT = '/users';
 
@@ -17,19 +18,17 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   beforeEach(async () => {
-    await request(app)
-      .post('/users')
-      .send({
-        name: userData.dataValues.name,
-        last_name: userData.dataValues.lastName,
-        email: userData.dataValues.email,
-        password: 'ABC123ab'
-      });
+    const { email } = await createUser({
+      name: userData.dataValues.name,
+      lastName: userData.dataValues.lastName,
+      email: userData.dataValues.email,
+      password: 'ABC123ab'
+    });
 
     response = await request(app)
       .post('/users/sessions')
       .send({
-        email: userData.dataValues.email,
+        email,
         password: 'ABC123ab'
       });
 

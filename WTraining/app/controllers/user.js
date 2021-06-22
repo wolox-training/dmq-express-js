@@ -9,6 +9,7 @@ const { ADMIN } = require('../constants/constants');
 const { createOrUpdateAdminUser } = require('../interactors/admin_user');
 const { verifyUserAndPassword, returnDataWithToken } = require('../interactors/sign_in');
 const { unauthorizedError } = require('../errors');
+const { createUserInteractor, sendWelcomeEmailInteractor } = require('../interactors/user');
 
 exports.findAllUser = (req, res, next) => {
   const pagination = paginationMapper(req.query);
@@ -26,20 +27,18 @@ exports.findAllUser = (req, res, next) => {
     });
 };
 
-exports.createUser = (req, res, next) => {
-  const dataUser = userMapper(req.body);
+exports.createUser = async (req, res, next) => {
+  try {
+    const userData = await createUserInteractor(req.body);
+    await sendWelcomeEmailInteractor(userData);
 
-  return userService
-    .createUser(dataUser)
-    .then(userData => {
-      const user = userSerializer(userData);
-      logger.info('user created ', user.name);
-      return res.status(201).send(user);
-    })
-    .catch(e => {
-      logger.error(e.ValidationErrorItem);
-      return next(e);
-    });
+    const user = userSerializer(userData);
+    logger.info('user created ', user.name);
+    return res.status(201).send(user);
+  } catch (e) {
+    logger.error(e.ValidationErrorItem);
+    return next(e);
+  }
 };
 
 exports.signIn = (req, res, next) =>

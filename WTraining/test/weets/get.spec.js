@@ -2,13 +2,14 @@ const request = require('supertest');
 const { factory } = require('factory-girl');
 const app = require('../../app');
 const { factoryByModel } = require('../factory/factory_by_models');
+const { createUser } = require('../../app/services/user');
 const {
   OK,
-  FORBBIDEN_ERROR,
-  UNAUTHORIZED_ERROR,
   PAGE,
   LIMIT,
   ORDER,
+  FORBBIDEN_ERROR,
+  UNAUTHORIZED_ERROR,
   VALIDATION_ERROR
 } = require('../constants/constants');
 
@@ -25,21 +26,16 @@ describe(`POST ${ENDPOINT}`, () => {
   });
 
   beforeEach(async () => {
-    await request(app)
-      .post('/users')
-      .send({
-        name: userData.dataValues.name,
-        last_name: userData.dataValues.lastName,
-        email: userData.dataValues.email,
-        password: 'ABC123ab'
-      });
+    const { email } = await createUser({
+      name: userData.dataValues.name,
+      lastName: userData.dataValues.lastName,
+      email: userData.dataValues.email,
+      password: 'ABC123ab'
+    });
 
     response = await request(app)
       .post('/users/sessions')
-      .send({
-        email: userData.dataValues.email,
-        password: 'ABC123ab'
-      });
+      .send({ email, password: 'ABC123ab' });
 
     responseToken = response.body.token;
   });
@@ -89,6 +85,7 @@ describe(`POST ${ENDPOINT}`, () => {
     test('Status code should be 401', () => {
       expect(response.statusCode).toEqual(UNAUTHORIZED_ERROR);
     });
+
     test('Should the  have the following properties', () => {
       expect(response.body).toStrictEqual({ internal_code: 'unauthorized_error', message: 'Unauthorized' });
     });
