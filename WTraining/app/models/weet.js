@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     { underscored: true, tableName: 'weets' }
   );
   Weet.associate = models => {
-    Weet.belongsTo(models.User, { as: 'user', foreignKey: 'userId' });
+    Weet.belongsTo(models.User, { foreignKey: 'userId' });
   };
   return Weet;
 };
