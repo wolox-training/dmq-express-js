@@ -1,2 +1,5 @@
-exports.countPerPage = (count, limit) =>
-  count % Number(limit) === 0 ? Math.trunc(count / Number(limit)) : Math.trunc(count / Number(limit)) + 1;
+const { PAGE } = require('../constants/constants');
+
+exports.countPerPage = (count, limit) => Math.ceil(count / limit);
+exports.previousPage = (offset, page) => (offset >= PAGE ? page - PAGE : null);
+exports.nextPage = (totalPage, page) => (page <= totalPage ? page + PAGE : null);

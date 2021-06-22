@@ -17,3 +17,5 @@ exports.IS_LEAD = 10;
 exports.IS_TL = 20;
 exports.IS_EM = 30;
 exports.IS_HEAD = 50;
+exports.SUBSTR_START = 0;
+exports.SUBSTR_END = 140;
