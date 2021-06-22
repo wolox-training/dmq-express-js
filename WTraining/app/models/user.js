@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: DEVELOPER,
         allowNull: false
+      },
+      score: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
       }
     },
     {

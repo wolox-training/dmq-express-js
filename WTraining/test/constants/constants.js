@@ -10,3 +10,5 @@ exports.FORBBIDEN_ERROR = 403;
 exports.PAGE = 1;
 exports.LIMIT = 50;
 exports.ORDER = 'id';
+exports.SCORE = 1;
+exports.WRONG_SCORE = 2343;

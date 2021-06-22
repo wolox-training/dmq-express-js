@@ -56,12 +56,11 @@ describe(`POST ${ENDPOINT}`, () => {
     });
     test('Should the  have the following properties', () => {
       expect(response.body).toHaveProperty(
-        'current_page',
-        'next_page',
-        'previous_page',
-        'total_count',
+        'weets',
         'total_page',
-        'weets'
+        'total_count',
+        'previous_page',
+        'next_page'
       );
     });
   });

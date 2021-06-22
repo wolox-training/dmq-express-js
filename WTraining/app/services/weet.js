@@ -29,3 +29,18 @@ exports.findAllWeet = ({ limit, orderBy, offset }) =>
     logger.error(e);
     throw databaseError(e.message);
   });
+
+exports.findOneWeet = ({ id }) =>
+  Weet.findOne({
+    where: { id },
+    include: [{ model: User, required: true }]
+  }).catch(e => {
+    logger.error(e);
+    throw databaseError(e.message);
+  });
+
+exports.rateWeet = weet =>
+  Weet.create(weet).catch(e => {
+    logger.error(e);
+    throw databaseError(e.message);
+  });
