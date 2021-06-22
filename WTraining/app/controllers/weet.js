@@ -18,8 +18,8 @@ exports.findAllWeet = (req, res, next) => {
   return weetService
     .findAllWeet(pagination)
     .then(weets => {
-      const qty = countPerPage(weets.count, req.query.limit);
-      const response = allWeetsSerializer({ ...weets, qty });
+      const totalPage = countPerPage(weets.count, req.query.limit);
+      const response = allWeetsSerializer({ ...weets, ...pagination, totalPage });
       return res.status(200).send(response);
     })
     .catch(e => {
