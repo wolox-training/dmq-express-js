@@ -51,6 +51,10 @@ const config = {
     jwt: {
       jwtSecret: process.env.JWT_SECRET || 'key_secret',
       jwtExpire: process.env.JWT_EXPIRE || 3600
+    },
+    sendgrid: {
+      sendgridKey: process.env.SENDGRID_API_KEY,
+      sendgridEmail: process.env.SENDGRID_EMAIL
     }
   }
 };

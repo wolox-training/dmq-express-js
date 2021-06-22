@@ -1,10 +1,14 @@
 const request = require('supertest');
+const sgMail = require('@sendgrid/mail');
 const { factory } = require('factory-girl');
 const app = require('../../app');
 const { factoryByModel } = require('../factory/factory_by_models');
 const { VALIDATION_ERROR, CREATED, CONFLICT_ERROR } = require('../constants/constants');
 
 const ENDPOINT = '/users';
+
+sgMail.setApiKey = jest.fn();
+sgMail.send = jest.fn();
 
 let response = {};
 let userData = {};
@@ -13,22 +17,20 @@ describe(`POST ${ENDPOINT}`, () => {
   beforeAll(async () => {
     await factoryByModel('User');
     userData = await factory.build('User', { email: 'asasas@wolox.com.ar' });
+    sgMail.send.mockImplementation(() => Promise.resolve());
+    sgMail.setApiKey.mockImplementation(() => Promise.resolve());
   });
 
   describe('Should handle error when password does not meet requirements', () => {
-    beforeEach(async done => {
-      const user = {
-        name: userData.dataValues.name,
-        last_name: userData.dataValues.lastName,
-        email: userData.dataValues.email,
-        password: 'err3e'
-      };
-
+    beforeEach(async () => {
       response = await request(app)
         .post(ENDPOINT)
-        .send(user);
-
-      done();
+        .send({
+          name: userData.dataValues.name,
+          last_name: userData.dataValues.lastName,
+          email: userData.dataValues.email,
+          password: 'err3e'
+        });
     });
 
     test('Status code should be 422', () => {
@@ -51,16 +53,14 @@ describe(`POST ${ENDPOINT}`, () => {
 
   describe('Should be successful', () => {
     beforeEach(async () => {
-      const user = {
-        name: userData.dataValues.name,
-        last_name: userData.dataValues.lastName,
-        email: userData.dataValues.email,
-        password: 'ABC123ab'
-      };
-
       response = await request(app)
         .post(ENDPOINT)
-        .send(user);
+        .send({
+          name: userData.dataValues.name,
+          last_name: userData.dataValues.lastName,
+          email: userData.dataValues.email,
+          password: 'ABC123ab'
+        });
     });
 
     test('Status code should be 201', () => {
@@ -73,20 +73,23 @@ describe(`POST ${ENDPOINT}`, () => {
 
   describe('Should handle the error when the mail is already in use', () => {
     beforeEach(async () => {
-      const user = {
-        name: userData.dataValues.name,
-        last_name: userData.dataValues.lastName,
-        email: userData.dataValues.email,
-        password: 'ABC123ab'
-      };
-
       await request(app)
         .post(ENDPOINT)
-        .send(user);
+        .send({
+          name: userData.dataValues.name,
+          last_name: userData.dataValues.lastName,
+          email: userData.dataValues.email,
+          password: 'ABC123ab'
+        });
 
       response = await request(app)
         .post(ENDPOINT)
-        .send(user);
+        .send({
+          name: userData.dataValues.name,
+          last_name: userData.dataValues.lastName,
+          email: userData.dataValues.email,
+          password: 'ABC123ab'
+        });
     });
 
     test('Status code should be 409', () => {
